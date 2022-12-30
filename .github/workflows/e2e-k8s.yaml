@@ -1,0 +1,71 @@
+name: E2E Tests (k8s)
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+  push:
+    branches:
+      - master
+      - k8s-coverage
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  k3s:
+    name: "k8s"
+    runs-on: ubuntu-22.04
+    # NOTE: Just a thought in case the timeouts fail; might not be
+    # necessary, but might not hurt either, would vary based on the
+    # size of the testing matrix, too.
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        # TODO: Document which versions we support and cover them.
+        # https://github.com/StackStorm/stackstorm-k8s/issues/342
+        minikube-version:
+          - v1.28.0
+        kubernetes-version:
+          - v1.25.4
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Set up Minikube and K8s
+        uses: manusa/actions-setup-minikube@v2.7.2
+        with:
+          minikube version: ${{ matrix.minikube-version }}
+          kubernetes version: ${{ matrix.kubernetes-version }}
+          github token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update stackstorm-ha chart dependencies
+        run: |
+          set -x
+          helm dependency update
+
+      - name: Helm install
+        run: |
+          helm install --timeout 10m0s --debug --wait \
+            --name-template stackstorm-ha .
+
+      - name: Helm test
+        run: |
+          helm test stackstorm-ha
+
+      - name: Helm upgrade with RBAC enabled
+        run: |
+          helm upgrade --set st2.rbac.enabled=true \
+            --timeout 5m0s --debug --wait stackstorm-ha .
+
+      - name: Helm test
+        run: |
+          helm test stackstorm-ha
+
+      - name: Show all Kubernetes resources
+        if: ${{ always() }}
+        run: |
+          kubectl get all
