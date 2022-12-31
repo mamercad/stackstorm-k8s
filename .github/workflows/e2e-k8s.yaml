@@ -35,12 +35,20 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
+      # - name: Set up Minikube and K8s
+      #   uses: manusa/actions-setup-minikube@v2.7.2
+      #   with:
+      #     minikube version: ${{ matrix.minikube-version }}
+      #     kubernetes version: ${{ matrix.kubernetes-version }}
+      #     github token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up Minikube and K8s
-        uses: manusa/actions-setup-minikube@v2.7.2
+        uses: medyagh/setup-minikube@latest
         with:
-          minikube version: ${{ matrix.minikube-version }}
-          kubernetes version: ${{ matrix.kubernetes-version }}
-          github token: ${{ secrets.GITHUB_TOKEN }}
+          minikube-version: ${{ matrix.minikube-version }}
+          kubernetes-version: ${{ matrix.kubernetes-version }}
+          cpus: 2
+          memory: 6000m
 
       - name: Update stackstorm-ha chart dependencies
         run: |
