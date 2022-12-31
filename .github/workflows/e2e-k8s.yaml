@@ -53,10 +53,10 @@ jobs:
           set -x
           helm dependency update
 
-      # - name: Helm install
-      #   run: |
-      #     helm install --timeout 20m0s --debug --wait \
-      #       --name-template stackstorm-ha .
+      - name: Helm install
+        run: |
+          helm install --timeout 10m0s --debug --wait \
+            --name-template stackstorm-ha .
 
       # - name: Helm test
       #   run: |
