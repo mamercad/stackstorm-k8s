@@ -20,7 +20,7 @@ jobs:
     # NOTE: Just a thought in case the timeouts fail; might not be
     # necessary, but might not hurt either, would vary based on the
     # size of the testing matrix, too.
-    timeout-minutes: 40
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -30,7 +30,9 @@ jobs:
         minikube-version:
           - "v1.28.0"
         kubernetes-version:
-          - "v1.25.4"
+          - "v1.24.9"
+          - "v1.25.5"
+          - "v1.26.0"
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
@@ -48,35 +50,29 @@ jobs:
       #     minikube-version: ${{ matrix.minikube-version }}
       #     kubernetes-version: ${{ matrix.kubernetes-version }}
 
-      - name: kubectl
-        run: |
-          sleep 120
-          kubectl get pods -A
-          kubectl get nodes
-
       - name: Update stackstorm-ha chart dependencies
         run: |
           helm dependency update
 
       - name: Helm install
         run: |
-          helm install --timeout 10m0s --debug --wait \
+          helm install --timeout 15m0s --debug --wait \
             --name-template stackstorm-ha .
 
-      # - name: Helm test
-      #   run: |
-      #     helm test stackstorm-ha
+      - name: Helm test
+        run: |
+          helm test stackstorm-ha
 
-      # - name: Helm upgrade with RBAC enabled
-      #   run: |
-      #     helm upgrade --set st2.rbac.enabled=true \
-      #       --timeout 5m0s --debug --wait stackstorm-ha .
+      - name: Helm upgrade with RBAC enabled
+        run: |
+          helm upgrade --set st2.rbac.enabled=true \
+            --timeout 5m0s --debug --wait stackstorm-ha .
 
-      # - name: Helm test
-      #   run: |
-      #     helm test stackstorm-ha
+      - name: Helm test
+        run: |
+          helm test stackstorm-ha
 
-      # - name: Show all Kubernetes resources
-      #   if: ${{ always() }}
-      #   run: |
-      #     kubectl get all
+      - name: Show all Kubernetes resources
+        if: ${{ always() }}
+        run: |
+          kubectl get all
