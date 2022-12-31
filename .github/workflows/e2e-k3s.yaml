@@ -8,9 +8,13 @@ on:
   push:
     branches:
       - master
+      - k8s-coverage
   schedule:
     - cron: "0 1 * * *"
   workflow_dispatch:
+
+concurrency:
+  group: k3s
 
 jobs:
   k3s:
@@ -19,7 +23,7 @@ jobs:
     # NOTE: Just a thought in case the timeouts fail; might not be
     # necessary, but might not hurt either, would vary based on the
     # size of the testing matrix, too.
-    timeout-minutes: 30
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -27,7 +31,9 @@ jobs:
         # TODO: Document which versions we support and cover them.
         # https://github.com/StackStorm/stackstorm-k8s/issues/342
         k3s-channel:
-          - "v1.25.4+k3s1"
+          - "v1.24.9+k3s1"
+          - "v1.25.5+k3s1"
+          - "v1.26.0+k3s1"
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
@@ -40,12 +46,11 @@ jobs:
 
       - name: Update stackstorm-ha chart dependencies
         run: |
-          set -x
           helm dependency update
 
       - name: Helm install
         run: |
-          helm install --timeout 10m0s --debug --wait \
+          helm install --timeout 15m0s --debug --wait \
             --name-template stackstorm-ha .
 
       - name: Helm test

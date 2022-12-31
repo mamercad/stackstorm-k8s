@@ -13,6 +13,9 @@ on:
     - cron: "0 1 * * *"
   workflow_dispatch:
 
+concurrency:
+  group: k8s
+
 jobs:
   k3s:
     name: "k8s"
@@ -43,12 +46,6 @@ jobs:
           minikube version: ${{ matrix.minikube-version }}
           kubernetes version: ${{ matrix.kubernetes-version }}
           github token: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Set up Minikube and K8s
-      #   uses: medyagh/setup-minikube@latest
-      #   with:
-      #     minikube-version: ${{ matrix.minikube-version }}
-      #     kubernetes-version: ${{ matrix.kubernetes-version }}
 
       - name: Update stackstorm-ha chart dependencies
         run: |
