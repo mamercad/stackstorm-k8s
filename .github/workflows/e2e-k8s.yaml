@@ -43,35 +43,33 @@ jobs:
       #     github token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Minikube and K8s
-        uses: medyagh/setup-minikube@master
+        uses: medyagh/setup-minikube@latest
         with:
           minikube-version: ${{ matrix.minikube-version }}
           kubernetes-version: ${{ matrix.kubernetes-version }}
-          # cpus: 2
-          # memory: 6000m
 
       - name: Update stackstorm-ha chart dependencies
         run: |
           set -x
           helm dependency update
 
-      - name: Helm install
-        run: |
-          helm install --timeout 20m0s --debug --wait \
-            --name-template stackstorm-ha .
+      # - name: Helm install
+      #   run: |
+      #     helm install --timeout 20m0s --debug --wait \
+      #       --name-template stackstorm-ha .
 
-      - name: Helm test
-        run: |
-          helm test stackstorm-ha
+      # - name: Helm test
+      #   run: |
+      #     helm test stackstorm-ha
 
-      - name: Helm upgrade with RBAC enabled
-        run: |
-          helm upgrade --set st2.rbac.enabled=true \
-            --timeout 5m0s --debug --wait stackstorm-ha .
+      # - name: Helm upgrade with RBAC enabled
+      #   run: |
+      #     helm upgrade --set st2.rbac.enabled=true \
+      #       --timeout 5m0s --debug --wait stackstorm-ha .
 
-      - name: Helm test
-        run: |
-          helm test stackstorm-ha
+      # - name: Helm test
+      #   run: |
+      #     helm test stackstorm-ha
 
       - name: Show all Kubernetes resources
         if: ${{ always() }}
