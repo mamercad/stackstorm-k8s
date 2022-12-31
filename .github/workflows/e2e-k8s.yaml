@@ -43,7 +43,7 @@ jobs:
       #     github token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Minikube and K8s
-        uses: medyagh/setup-minikube@latest
+        uses: medyagh/setup-minikube@master
         with:
           minikube-version: ${{ matrix.minikube-version }}
           kubernetes-version: ${{ matrix.kubernetes-version }}
