@@ -20,7 +20,7 @@ jobs:
     # NOTE: Just a thought in case the timeouts fail; might not be
     # necessary, but might not hurt either, would vary based on the
     # size of the testing matrix, too.
-    timeout-minutes: 30
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -49,7 +49,10 @@ jobs:
       #     kubernetes-version: ${{ matrix.kubernetes-version }}
 
       - name: kubectl
-        run: kubectl get pods -A
+        run: |
+          sleep 120
+          kubectl get pods -A
+          kubectl get nodes
 
       - name: Update stackstorm-ha chart dependencies
         run: |
