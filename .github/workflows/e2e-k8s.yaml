@@ -48,15 +48,18 @@ jobs:
           minikube-version: ${{ matrix.minikube-version }}
           kubernetes-version: ${{ matrix.kubernetes-version }}
 
-      - name: Update stackstorm-ha chart dependencies
-        run: |
-          set -x
-          helm dependency update
+      - name: kubectl
+        run: kubectl get pods -A
 
-      - name: Helm install
-        run: |
-          helm install --timeout 10m0s --debug --wait \
-            --name-template stackstorm-ha .
+      # - name: Update stackstorm-ha chart dependencies
+      #   run: |
+      #     set -x
+      #     helm dependency update
+
+      # - name: Helm install
+      #   run: |
+      #     helm install --timeout 10m0s --debug --wait \
+      #       --name-template stackstorm-ha .
 
       # - name: Helm test
       #   run: |
@@ -71,7 +74,7 @@ jobs:
       #   run: |
       #     helm test stackstorm-ha
 
-      - name: Show all Kubernetes resources
-        if: ${{ always() }}
-        run: |
-          kubectl get all
+      # - name: Show all Kubernetes resources
+      #   if: ${{ always() }}
+      #   run: |
+      #     kubectl get all
