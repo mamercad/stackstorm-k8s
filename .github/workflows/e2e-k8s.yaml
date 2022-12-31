@@ -15,6 +15,7 @@ on:
 
 concurrency:
   group: k8s
+  cancel-in-progress: false
 
 jobs:
   k3s:
