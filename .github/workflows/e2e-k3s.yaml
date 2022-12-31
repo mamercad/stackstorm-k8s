@@ -32,8 +32,8 @@ jobs:
         # TODO: Document which versions we support and cover them.
         # https://github.com/StackStorm/stackstorm-k8s/issues/342
         k3s-channel:
-          - "v1.24.9+k3s1"
-          - "v1.25.5+k3s1"
+          # - "v1.24.9+k3s1"
+          # - "v1.25.5+k3s1"
           - "v1.26.0+k3s1"
     steps:
       - name: Checkout source
@@ -61,7 +61,7 @@ jobs:
       - name: Helm upgrade with RBAC enabled
         run: |
           helm upgrade --set st2.rbac.enabled=true \
-            --timeout 5m0s --debug --wait stackstorm-ha .
+            --timeout 10m0s --debug --wait stackstorm-ha .
 
       - name: Helm test
         run: |
