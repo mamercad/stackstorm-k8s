@@ -51,15 +51,14 @@ jobs:
       - name: kubectl
         run: kubectl get pods -A
 
-      # - name: Update stackstorm-ha chart dependencies
-      #   run: |
-      #     set -x
-      #     helm dependency update
+      - name: Update stackstorm-ha chart dependencies
+        run: |
+          helm dependency update
 
-      # - name: Helm install
-      #   run: |
-      #     helm install --timeout 10m0s --debug --wait \
-      #       --name-template stackstorm-ha .
+      - name: Helm install
+        run: |
+          helm install --timeout 10m0s --debug --wait \
+            --name-template stackstorm-ha .
 
       # - name: Helm test
       #   run: |
