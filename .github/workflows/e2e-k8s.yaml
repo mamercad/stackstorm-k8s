@@ -47,6 +47,8 @@ jobs:
           minikube version: ${{ matrix.minikube-version }}
           kubernetes version: ${{ matrix.kubernetes-version }}
           github token: ${{ secrets.GITHUB_TOKEN }}
+          start args: |
+            --cpus max --memory max
 
       - name: Update stackstorm-ha chart dependencies
         run: |
