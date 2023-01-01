@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: k3s
+  group: e2e
   cancel-in-progress: false
 
 jobs:
