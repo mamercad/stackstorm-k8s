@@ -71,7 +71,7 @@ jobs:
       - run:
           name: Create new K8s cluster
           command: |
-            sudo -E mkdir /data
+            sudo -E mkdir /data /tmp/hostpath_pv /tmp/hostpath-provisioner
             sudo -E minikube start --vm-driver=none --container-runtime=docker
           environment:
             CHANGE_MINIKUBE_NONE_USER: "true"
