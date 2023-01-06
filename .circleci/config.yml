@@ -70,7 +70,9 @@ jobs:
             """
       - run:
           name: Create new K8s cluster
-          command: sudo -E minikube start --vm-driver=none --container-runtime=docker
+          command: |
+            sudo -E mkdir /data
+            sudo -E minikube start --vm-driver=none --container-runtime=docker
           environment:
             CHANGE_MINIKUBE_NONE_USER: "true"
       - run:
